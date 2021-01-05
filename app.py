@@ -52,27 +52,30 @@ def index():
 @app.route("/predict", methods=["POST"])
 @cross_origin()
 def predict():
-    print('HERE')
-    message = request.get_json(force=True)
-    encoded = message['image']
-    decoded = base64.b64decode(encoded)
-    dataBytesIO=io.BytesIO(decoded)
-    dataBytesIO.seek(0)
-    image = Image.open(dataBytesIO)
-    test_image=preprocess(image)
-    prediction=model.predict(test_image)
-    accuracy=prediction[0][0]
-    
-    if accuracy<=0.5:
-        #print("The person does not have symptoms of Covid")
-        label="Covid19 Negative"
-    else:
-        #print("The person has symptoms of Covid")
-        label="Covid19 Positive"
-    print(prediction,label,accuracy)
-    
-    response = {'prediction': {'result': label}}
-    print(response)
-    return jsonify(response)
+    if request.method == "POST":
+        print('HERE')
+        message = request.get_json(force=True)
+        encoded = message['image']
+        decoded = base64.b64decode(encoded)
+        dataBytesIO=io.BytesIO(decoded)
+        dataBytesIO.seek(0)
+        image = Image.open(dataBytesIO)
+        test_image=preprocess(image)
+        prediction=model.predict(test_image)
+        accuracy=prediction[0][0]
+        
+        if accuracy<=0.5:
+            #print("The person does not have symptoms of Covid")
+            label="Covid19 Negative"
+        else:
+            #print("The person has symptoms of Covid")
+            label="Covid19 Positive"
+        print(prediction,label,accuracy)
+        
+        response = {'prediction': {'result': label}}
+        print(response)
+        return jsonify(response)
+    return render_template("index.html")
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
