@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Covid 19 Testing</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+
+    
+</head>
+
+    <body>
+
+    <!-- ################# Header Starts Here#######################--->
+    <header>
+       
+        <div id="nav-head" class="header-nav">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2 col-md-3 no-padding col-sm-12 nav-img">
+                        <img src="../static/images/logo.png" alt="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    
+     <!-- ################# Prediction Starts Here#######################--->
+
+
+    <div class="doctor-message">
+        <div class="inner-lay">
+            <div class="container">
+               <div class="row session-title">
+                   <h2>COVID-19 TESTING USING X-RAY IMAGES</h2>
+               </div>
+               <input id="image-selector" type="file">
+               <button id="predict-button" class="btn">Predict</button>
+        		<div>
+        		<img id="selected-image" width="300" src=""/>
+        		</div>
+        		
+                <h5>PREDICTION: <span id="result">...</span></h5>
+        		
+           		<div>
+           		&nbsp;
+               	<p>NOTE:</p>
+                <p>This is just for educational and demonstarton purpose and this should not be treated as a accurate prediction.</p>
+                <p>The goal was to implement a deep learing model that could predict Covid 19 from X-ray scans.</p>
+                <p>For Covid 19 test please consult your doctor.</p>
+                </div>
+                
+                <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+                <script>
+                    let base64Image;
+                    $("#image-selector").change(function() {
+                        let reader = new FileReader();
+                        reader.onload = function(e) {
+                            let dataURL = reader.result;
+                            $('#selected-image').attr("src", dataURL);
+                            base64Image = dataURL.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+                            console.log(base64Image);
+                        }
+                        reader.readAsDataURL($("#image-selector")[0].files[0]);
+                        $("#result").text("");
+                
+                    });
+                
+                    $("#predict-button").click(function(){
+                            let message = {
+                            image: base64Image
+                        }
+                        console.log(message);
+                        $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(response){
+                            $("#result").text(response.prediction.result);
+                            console.log(response);
+                        });
+                    });
+                    
+                </script>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- ################# Footer Starts Here#######################--->
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-4 col-sm-12">
+                    <h2>Contact</h2>
+                    <address class="md-margin-bottom-40">
+                        Phone: <a class="">+91 8928575114 </a><br>
+                        Email: <a href="mailto:sabyasachi10.4.das@gail.com" class="">sabyasachi10.4.das@gail.com</a><br>
+                        LinkedIn: <a href="https://www.linkedin.com/in/sabyasachi-das-8a549056/" class="">www.linkedin.com/in/sabyasachi-das-8a549056 </a></br>
+                        GIT Hub: <a href="https://github.com/sabya10-4" class="">https://github.com/sabya10-4 </a>
+                    </address>
+
+                </div>
+            </div>
+        </div>      
+
+    </footer>
+    
+    </body>
+</html>
